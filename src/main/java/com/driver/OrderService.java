@@ -22,7 +22,7 @@ public class OrderService {
     }
 
     public String addOrderPartnerPair(String orderId, String partnerId){
-        String result = orderRepository.addOrderPartner(orderId, partnerId);
+        String result = orderRepository.addOrderPartnerPair(orderId, partnerId);
         return result;
     }
 
