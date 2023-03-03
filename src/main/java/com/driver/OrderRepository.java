@@ -14,8 +14,6 @@ public class OrderRepository {
     HashMap<String, String> assignDB = new HashMap<>();
 
     public String addOrder(Order order) {
-        if(orderDB.containsValue(order))
-            return "already value";
         orderDB.put(order.getId(), order);
         return "Added";
     }
@@ -26,8 +24,6 @@ public class OrderRepository {
         return "Added";
     }
 
-    //pairdb is an hashmap of partnerid and list of order
-    //assigndb is an hashmap of orderid and partnerid
     public String addOrderPartner(String orderId, String partnerId) {
         List<String> list = pairDB.getOrDefault(partnerId, new ArrayList<>());
         list.add(orderId);
@@ -39,8 +35,10 @@ public class OrderRepository {
     }
 
     public Order getOrderById(String orderId) {
-        if(orderDB.containsKey(orderId))
-            return orderDB.get(orderId);
+        for (String s : orderDB.keySet()) {
+            if (s.equals(orderId))
+                return orderDB.get(s);
+        }
         return null;
     }
 
@@ -51,13 +49,13 @@ public class OrderRepository {
     }
 
     public int getOrderCountByPartnerId(String partnerId) {
-        int orderCount = pairDB.getOrDefault(partnerId, new ArrayList<>()).size();
-        return orderCount;
+        int order = pairDB.getOrDefault(partnerId, new ArrayList<>()).size();
+        return order;
     }
 
     public List<String> getOrdersByPartnerId(String partnerId) {
-        List<String> ListOfOrders = pairDB.getOrDefault(partnerId, new ArrayList<>());
-        return ListOfOrders;
+        List<String> orders = pairDB.getOrDefault(partnerId, new ArrayList<>());
+        return orders;
     }
 
     public List<String> getAllOrders() {
@@ -91,15 +89,32 @@ public class OrderRepository {
 
     public String getLastDeliveryTimeByPartnerId(String partnerId) {
         // Return the time when that partnerId will deliver his last delivery order.
-        //String time = "";
+        String time = "";
         List<String> list = pairDB.get(partnerId);
         int deliveryTime = 0;
         for (String s : list) {
             Order order = orderDB.get(s);
             deliveryTime = Math.max(deliveryTime, order.getDeliveryTime());
         }
+        int hour = deliveryTime / 60;
+        String sHour = "";
+        if (hour < 10) {
+            sHour = "0" + String.valueOf(hour);
+        } else {
+            sHour = String.valueOf(hour);
+        }
 
-        return deliveryTime+"";
+        int min = deliveryTime % 60;
+        String sMin = "";
+        if (min < 10) {
+            sMin = "0" + String.valueOf(min);
+        } else {
+            sMin = String.valueOf(min);
+        }
+
+        time = sHour + ":" + sMin;
+
+        return time;
 
     }
 
