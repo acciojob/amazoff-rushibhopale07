@@ -14,20 +14,16 @@ class OrderRepository
     private Map<String, String> orderPartnerPair = new HashMap<>();
 
 
-    public String addOrder(Order order) {
-        orderDb.put(order.getId(), order);
-        return "New order added successfully";
-    }
+    public void addOrder(Order order) {orderDb.put(order.getId(), order);}
 
 
-    public String addPartner(String partner)
+    public void addPartner(String partner)
     {
         DeliveryPartner pId = new DeliveryPartner(partner);
         partnerDb.put(pId.getId(),pId);
-        return "New order added successfully";
     }
 
-    public String addOrderPartnerPair(String oId, String pId)
+    public void addOrderPartnerPair(String oId, String pId)
     {
         if (orderDb.containsKey(oId) && partnerDb.containsKey(pId))
         {
@@ -44,7 +40,6 @@ class OrderRepository
             partner.setNumberOfOrders(orderList.size());
             partnerDb.put(pId,partner);
         }
-        return "New order added successfully";
     }
 
     public Order getOrderById(String oId) { return orderDb.get(oId);}
@@ -116,7 +111,7 @@ class OrderRepository
         return String.format("%02d:%02d",HH,MM);
     }
 
-    public String deletePartnerById(String pId)
+    public void deletePartnerById(String pId)
     {
         HashSet<String> hs = new HashSet<>();
         if (partnerOrderDb.containsKey(pId) && partnerDb.containsKey(pId))
@@ -128,11 +123,10 @@ class OrderRepository
             partnerOrderDb.remove(pId);
             partnerDb.remove(pId);
         }
-        return "removed successfully";
     }
 
 
-    public String deleteOrderById(String oId)
+    public void deleteOrderById(String oId)
     {
         String pId = null;
         List<String> list = new ArrayList<>();
@@ -150,7 +144,5 @@ class OrderRepository
             partnerDb.put(pId,partner);
         }
         orderDb.remove(oId);
-        return "removed successfully";
     }
-
 }
